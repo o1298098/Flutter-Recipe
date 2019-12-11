@@ -10,6 +10,8 @@ import 'state.dart';
 Widget buildView(
     MainPageState state, Dispatch dispatch, ViewService viewService) {
   Adapt.initContext(viewService.context);
+  final CurvedAnimation p = CurvedAnimation(
+      parent: state.pageAnimationController, curve: Curves.ease);
   Widget _buildRecipeCell(String url) {
     return Container(
       width: Adapt.px(200),
@@ -28,45 +30,113 @@ Widget buildView(
   }
 
   Widget _buildTitle() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
-      height: Adapt.padTopH() + Adapt.px(150),
-      child: Row(
-        children: <Widget>[
-          SizedBox(width: Adapt.px(30)),
-          Container(
-            height: Adapt.px(90),
-            width: Adapt.px(3),
-            color: Colors.orange,
+    return FadeTransition(
+        opacity: Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+            parent: state.pageAnimationController, curve: Interval(0.0, .1))),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
+          height: Adapt.padTopH() + Adapt.px(150),
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: Adapt.px(30)),
+              Container(
+                height: Adapt.px(90),
+                width: Adapt.px(3),
+                color: Colors.orange,
+              ),
+              SizedBox(width: Adapt.px(35)),
+              Text(
+                'Fine dining',
+                style: TextStyle(fontSize: Adapt.px(60)),
+              ),
+              Expanded(child: SizedBox()),
+              Icon(
+                Icons.menu,
+                size: Adapt.px(60),
+              )
+            ],
           ),
-          SizedBox(width: Adapt.px(35)),
-          Text(
-            'Fine dining',
-            style: TextStyle(fontSize: Adapt.px(60)),
-          ),
-          Expanded(child: SizedBox()),
-          Icon(
-            Icons.menu,
-            size: Adapt.px(60),
-          )
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildLeftPanel() {
-    return Container(
-      width: Adapt.px(350),
-      child: Column(
-        children: <Widget>[
-          _buildRecipeCell('images/feta_leek_and_chard_pie.jpg'),
-          SizedBox(height: Adapt.px(90)),
-          _buildRecipeCell('images/cumin_chicken.jpg'),
-          SizedBox(height: Adapt.px(90)),
-          _buildRecipeCell('images/goat_s_cheese_aubergine.jpg')
-        ],
-      ),
-    );
+    return SlideTransition(
+        position: Tween(begin: Offset.zero, end: Offset(0, 1))
+            .animate(state.pageAnimationController),
+        child: FadeTransition(
+            opacity: Tween(begin: 1.0, end: 0.0).animate(p),
+            child: Container(
+              width: Adapt.px(350),
+              child: Column(
+                children: <Widget>[
+                  _buildRecipeCell('images/feta_leek_and_chard_pie.jpg'),
+                  SizedBox(height: Adapt.px(90)),
+                  _buildRecipeCell('images/cumin_chicken.jpg'),
+                  SizedBox(height: Adapt.px(90)),
+                  _buildRecipeCell('images/goat_s_cheese_aubergine.jpg')
+                ],
+              ),
+            )));
+  }
+
+  Widget _buildRightPanelInfo() {
+    return FadeTransition(
+        opacity: Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+            parent: state.pageAnimationController, curve: Interval(0.0, .1))),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: Adapt.px(30)),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
+              child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(
+                        text: 'Rocket',
+                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    TextSpan(text: ' Pesto Orzo')
+                  ]),
+                  style: TextStyle(fontSize: Adapt.px(35))),
+            ),
+            SizedBox(height: Adapt.px(20)),
+            Container(
+                width: Adapt.screenW() - Adapt.px(350),
+                padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
+                child: Text(
+                  'with Charred Courgettes and Tomato Salad',
+                  style: TextStyle(
+                      color: Colors.grey, fontSize: Adapt.px(22), height: 1.5),
+                )),
+            SizedBox(height: Adapt.px(30)),
+            Container(
+                width: Adapt.screenW() - Adapt.px(350),
+                padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
+                child: Text('150cl',
+                    style: TextStyle(
+                        color: Color(0xFFD6D5D6),
+                        fontSize: Adapt.px(55),
+                        fontWeight: FontWeight.w700))),
+            SizedBox(height: Adapt.px(30)),
+            Container(
+              width: Adapt.px(250),
+              height: Adapt.px(64),
+              margin: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
+              decoration: BoxDecoration(
+                  color: Color(0xFFFFBB00),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0xFFFFBB00).withAlpha(80),
+                        blurRadius: 10,
+                        offset: Offset(0, 8))
+                  ],
+                  borderRadius: BorderRadius.circular(Adapt.px(32))),
+              child: Center(
+                  child: Text(
+                'Ingredients',
+                style: TextStyle(color: Colors.white, fontSize: Adapt.px(24)),
+              )),
+            ),
+          ],
+        ));
   }
 
   Widget _buildRightPanel() {
@@ -74,67 +144,20 @@ Widget buildView(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(left: Adapt.px(40)),
-          width: Adapt.screenW() - Adapt.px(390),
-          height: Adapt.px(500),
-          decoration: BoxDecoration(
-              //shape: BoxShape.circle,
-              image: DecorationImage(
-                  alignment: Alignment.topLeft,
-                  fit: BoxFit.cover,
-                  image: AssetImage('images/rocket_pesto_orzo_dish.png'))),
-        ),
-        SizedBox(height: Adapt.px(30)),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
-          child: Text.rich(
-              TextSpan(children: [
-                TextSpan(
-                    text: 'Rocket',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
-                TextSpan(text: ' Pesto Orzo')
-              ]),
-              style: TextStyle(fontSize: Adapt.px(35))),
-        ),
-        SizedBox(height: Adapt.px(20)),
-        Container(
-            width: Adapt.screenW() - Adapt.px(350),
-            padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
-            child: Text(
-              'with Charred Courgettes and Tomato Salad',
-              style: TextStyle(
-                  color: Colors.grey, fontSize: Adapt.px(22), height: 1.5),
+        SlideTransition(
+            position: Tween(begin: Offset.zero, end: Offset(1, 0)).animate(p),
+            child: Container(
+              margin: EdgeInsets.only(left: Adapt.px(40)),
+              width: Adapt.screenW() - Adapt.px(390),
+              height: Adapt.px(500),
+              decoration: BoxDecoration(
+                  //shape: BoxShape.circle,
+                  image: DecorationImage(
+                      alignment: Alignment.topLeft,
+                      fit: BoxFit.cover,
+                      image: AssetImage('images/rocket_pesto_orzo_dish.png'))),
             )),
-        SizedBox(height: Adapt.px(30)),
-        Container(
-            width: Adapt.screenW() - Adapt.px(350),
-            padding: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
-            child: Text('150cl',
-                style: TextStyle(
-                    color: Color(0xFFD6D5D6),
-                    fontSize: Adapt.px(55),
-                    fontWeight: FontWeight.w700))),
-        SizedBox(height: Adapt.px(30)),
-        Container(
-          width: Adapt.px(250),
-          height: Adapt.px(64),
-          margin: EdgeInsets.symmetric(horizontal: Adapt.px(50)),
-          decoration: BoxDecoration(
-              color: Color(0xFFFFBB00),
-              boxShadow: [
-                BoxShadow(
-                    color: Color(0xFFFFBB00).withAlpha(80),
-                    blurRadius: 10,
-                    offset: Offset(0, 8))
-              ],
-              borderRadius: BorderRadius.circular(Adapt.px(32))),
-          child: Center(
-              child: Text(
-            'Ingredients',
-            style: TextStyle(color: Colors.white, fontSize: Adapt.px(24)),
-          )),
-        ),
+        _buildRightPanelInfo(),
       ],
     );
   }
@@ -223,38 +246,41 @@ Widget buildView(
   }
 
   Widget _buildBottomPanel() {
-    return GestureDetector(
-        onTap: () => dispatch(MainPageActionCreator.bottomPanelTapped()),
-        child: Container(
-          height: Adapt.screenH() - Adapt.px(1040) - Adapt.padTopH(),
-          decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              image: DecorationImage(
-                  alignment: Alignment.topCenter,
-                  fit: BoxFit.cover,
-                  image: AssetImage('images/brooke_lark_bg.jpeg')),
-              borderRadius:
-                  BorderRadius.vertical(top: Radius.circular(Adapt.px(50)))),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              SizedBox(height: Adapt.px(35)),
-              Container(
-                height: Adapt.px(6),
-                width: Adapt.px(200),
-                color: Colors.white.withOpacity(.7),
-              ),
-              SizedBox(height: Adapt.px(20)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return FadeTransition(
+        opacity: Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+            parent: state.pageAnimationController, curve: Interval(0.0, .1))),
+        child: GestureDetector(
+            onTap: () => dispatch(MainPageActionCreator.bottomPanelTapped()),
+            child: Container(
+              height: Adapt.screenH() - Adapt.px(1040) - Adapt.padTopH(),
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  image: DecorationImage(
+                      alignment: Alignment.topCenter,
+                      fit: BoxFit.cover,
+                      image: AssetImage('images/brooke_lark_bg.jpeg')),
+                  borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(Adapt.px(50)))),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  _buildBottomInfo(),
-                  _buildBottomDish(),
+                  SizedBox(height: Adapt.px(35)),
+                  Container(
+                    height: Adapt.px(6),
+                    width: Adapt.px(200),
+                    color: Colors.white.withOpacity(.7),
+                  ),
+                  SizedBox(height: Adapt.px(20)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildBottomInfo(),
+                      _buildBottomDish(),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+            )));
   }
 
   return Scaffold(

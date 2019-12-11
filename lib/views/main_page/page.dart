@@ -5,7 +5,8 @@ import 'reducer.dart';
 import 'state.dart';
 import 'view.dart';
 
-class MainPage extends Page<MainPageState, Map<String, dynamic>> {
+class MainPage extends Page<MainPageState, Map<String, dynamic>>
+    with TickerProviderMixin {
   MainPage()
       : super(
           initState: initState,

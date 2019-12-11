@@ -269,22 +269,29 @@ Widget buildView(
   }
 
   return Scaffold(
-      body: Stack(children: <Widget>[
-    Container(
-      width: Adapt.px(350),
-      color: Color(0xFFF2F9FC),
-    ),
-    SafeArea(
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildTabBar(),
-            _buildCard(),
-            _buildIngredients(),
-          ],
-        ),
-      ),
-    )
-  ]));
+      backgroundColor: Colors.transparent,
+      body: AnimatedBuilder(
+        animation: p,
+        builder: (_, __) {
+          return Stack(children: <Widget>[
+            Container(
+              width: Adapt.px(350),
+              color: Color(0xFFF2F9FC).withOpacity(p.value),
+            ),
+            Container(
+              color: Colors.white.withOpacity(p.value),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _buildTabBar(),
+                    _buildCard(),
+                    _buildIngredients(),
+                  ],
+                ),
+              ),
+            )
+          ]);
+        },
+      ));
 }
