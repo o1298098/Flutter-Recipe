@@ -52,12 +52,12 @@ DetailPageState initState(Map<String, dynamic> args) {
     ]),
     CardInfo(
         2,
-        'images/rocket_pesto_orzo_bg.png',
-        'images/blackberries_dish.png',
-        'Pie',
-        'BlackBerries',
-        'Beef tendon chips are ... turns to steam and the tendons puff up to form delicateld crisp',
-        '120cl', [
+        'images/honey_ginger_and_soy_fish_parcels_bg.png',
+        'images/honey_ginger_and_soy_fish_parcels_dish.png',
+        'Honey',
+        'Soy Fish',
+        'Looking for a tasty midweek dinner option? Try cooking up our Honey, Ginger and Soy Fish Parcels in 40 minutes for a balanced and tasty meal.',
+        '250cl', [
       IngredientItem('images/i_orange.png', 'Orange'),
       IngredientItem('images/i_blackberries.png', 'Blackberries'),
       IngredientItem('images/i_cherry.png', 'Cherry'),
@@ -65,12 +65,12 @@ DetailPageState initState(Map<String, dynamic> args) {
     ]),
     CardInfo(
         3,
-        'images/rocket_pesto_orzo_bg.png',
-        'images/blackberries_dish.png',
-        'Pie',
-        'BlackBerries',
-        'Beef tendon chips are ... turns to steam and the tendons puff up to form delicateld crisp',
-        '120cl', [
+        'images/greek_style_penne_bg.png',
+        'images/greek_style_penne_dish.png',
+        'Greek Style',
+        'Penne',
+        'We love good Pasta with Feta and Olives and this deliciously simple, chef-curated recipe doesn\'t disappoint. Time to bust out the pots and pans!',
+        '320cl', [
       IngredientItem('images/i_orange.png', 'Orange'),
       IngredientItem('images/i_blackberries.png', 'Blackberries'),
       IngredientItem('images/i_cherry.png', 'Cherry'),

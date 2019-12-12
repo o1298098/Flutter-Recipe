@@ -27,13 +27,15 @@ Widget buildView(
     return GestureDetector(
         onDoubleTap: () => Navigator.of(viewService.context).pop(),
         onTap: () => dispatch(DetailPageActionCreator.tabCellTapped(d)),
-        child: Container(
-            width: Adapt.px(220),
-            height: Adapt.px(80),
-            child: Center(
-              child:
-                  Text(d.name, style: d.selected ? selectStyle : unSelectStyle),
-            )));
+        child: Material(
+            color: Colors.transparent,
+            child: Container(
+                width: Adapt.px(220),
+                height: Adapt.px(80),
+                child: Center(
+                  child: Text(d.name,
+                      style: d.selected ? selectStyle : unSelectStyle),
+                ))));
   }
 
   Widget _buildTabBar() {
@@ -116,7 +118,7 @@ Widget buildView(
           return Transform.translate(
               offset: Offset(Adapt.px(100), Adapt.px(310)) * (1 - p.value),
               child: Container(
-                padding: EdgeInsets.only(bottom: Adapt.px(80)),
+                padding: EdgeInsets.only(bottom: Adapt.px(60)),
                 height: _cardHeight,
                 width: Adapt.screenW(),
                 alignment: Alignment.bottomRight,
@@ -187,6 +189,7 @@ Widget buildView(
                         SizedBox(height: Adapt.px(20)),
                         Text(
                           state.selectedCard.description,
+                          maxLines: 2,
                           style: TextStyle(
                               color: Colors.white, fontSize: Adapt.px(18)),
                         )
