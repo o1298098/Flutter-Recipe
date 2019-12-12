@@ -16,7 +16,7 @@ Widget buildView(
       parent: state.pageAnimationController, curve: Curves.ease);
 
   final double _cardHeight = Adapt.screenH() * 2 / 3;
-  final double _recipeHeight = Adapt.padTopH() + Adapt.px(200);
+  final double _recipeHeight = Adapt.padTopH() + Adapt.px(160);
   Widget _buildTabCell(TabItem d) {
     TextStyle selectStyle = TextStyle(
         fontWeight: FontWeight.bold,
@@ -336,7 +336,7 @@ Widget buildView(
           state.selectedController.reverse();
         },
         child: Container(
-          margin: EdgeInsets.only(bottom: Adapt.px(80)),
+          margin: EdgeInsets.only(bottom: Adapt.px(60)),
           child: Row(
             children: <Widget>[
               SlideTransition(
@@ -386,8 +386,8 @@ Widget buildView(
     return Container(
       padding: EdgeInsets.fromLTRB(
           Adapt.px(50), _recipeHeight, Adapt.px(50), Adapt.px(50)),
-      margin: EdgeInsets.only(top: Adapt.px(80)),
-      child: ListView(
+      margin: EdgeInsets.only(top: Adapt.px(160)),
+      child: Column(
         children: state.cards.map(_buildRecipeCell).toList(),
       ),
     );
@@ -408,9 +408,13 @@ Widget buildView(
                 _buildSearchBar(),
                 _buildRecipeGroup(),
                 SafeArea(
+                  bottom: false,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      SizedBox(
+                        height: Adapt.px(30),
+                      ),
                       _buildTabBar(),
                       _buildCard(),
                       _buildIngredients(),
