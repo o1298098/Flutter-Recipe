@@ -17,11 +17,15 @@ Effect<DetailPageState> buildEffect() {
 void _onAction(Action action, Context<DetailPageState> ctx) {}
 
 void _onInit(Action action, Context<DetailPageState> ctx) {
-  Object ticker = ctx.stfState;
+  final Object ticker = ctx.stfState;
   ctx.state.tabController =
       AnimationController(vsync: ticker, duration: Duration(milliseconds: 300));
   ctx.state.pageAnimationController =
       AnimationController(vsync: ticker, duration: Duration(milliseconds: 400));
+  ctx.state.selectedController = AnimationController(
+      vsync: ticker,
+      duration: Duration(milliseconds: 800),
+      reverseDuration: Duration(milliseconds: 800));
 }
 
 void _onBuild(Action action, Context<DetailPageState> ctx) {
@@ -31,11 +35,13 @@ void _onBuild(Action action, Context<DetailPageState> ctx) {
 void _onDispose(Action action, Context<DetailPageState> ctx) {
   ctx.state.pageAnimationController?.dispose();
   ctx.state.tabController?.dispose();
+  ctx.state.selectedController?.dispose();
 }
 
 void _tabCellTapped(Action action, Context<DetailPageState> ctx) {
   TabItem item = action.payload;
   if (item != null) if (!item.selected) {
+    ctx.state.selectedController.forward();
     ctx.state.tabController.animateTo(item.index / 2,
         duration: Duration(milliseconds: 300), curve: Curves.ease);
     ctx.state.tars.forEach((f) {

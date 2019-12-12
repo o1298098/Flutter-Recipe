@@ -7,6 +7,7 @@ class DetailPageState implements Cloneable<DetailPageState> {
   List<TabItem> tars;
   AnimationController tabController;
   AnimationController pageAnimationController;
+  AnimationController selectedController;
   List<CardInfo> cards;
   CardInfo selectedCard;
   @override
@@ -16,6 +17,7 @@ class DetailPageState implements Cloneable<DetailPageState> {
       ..selectedCard = selectedCard
       ..tars = tars
       ..tabController = tabController
+      ..selectedController = selectedController
       ..pageAnimationController = pageAnimationController;
   }
 }
@@ -26,7 +28,7 @@ DetailPageState initState(Map<String, dynamic> args) {
         0,
         'images/brooke_lark_bg.jpeg',
         'images/brooke_lark_dish.png',
-        'Valley Farm ',
+        'Valley Farm',
         'Eggs',
         'Warm flour tortillas filled with crispy fried North Atlantic cod, fresh cabbage',
         '150cl', [
@@ -37,7 +39,33 @@ DetailPageState initState(Map<String, dynamic> args) {
     ]),
     CardInfo(
         1,
-        'images/brooke_lark_bg.jpeg',
+        'images/rocket_pesto_orzo_bg.png',
+        'images/blackberries_dish.png',
+        'Pie',
+        'BlackBerries',
+        'Beef tendon chips are ... turns to steam and the tendons puff up to form delicateld crisp',
+        '120cl', [
+      IngredientItem('images/i_orange.png', 'Orange'),
+      IngredientItem('images/i_blackberries.png', 'Blackberries'),
+      IngredientItem('images/i_cherry.png', 'Cherry'),
+      IngredientItem('images/i_strawberry.png', 'Strawberry'),
+    ]),
+    CardInfo(
+        2,
+        'images/rocket_pesto_orzo_bg.png',
+        'images/blackberries_dish.png',
+        'Pie',
+        'BlackBerries',
+        'Beef tendon chips are ... turns to steam and the tendons puff up to form delicateld crisp',
+        '120cl', [
+      IngredientItem('images/i_orange.png', 'Orange'),
+      IngredientItem('images/i_blackberries.png', 'Blackberries'),
+      IngredientItem('images/i_cherry.png', 'Cherry'),
+      IngredientItem('images/i_strawberry.png', 'Strawberry'),
+    ]),
+    CardInfo(
+        3,
+        'images/rocket_pesto_orzo_bg.png',
         'images/blackberries_dish.png',
         'Pie',
         'BlackBerries',

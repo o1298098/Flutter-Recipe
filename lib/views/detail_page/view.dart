@@ -11,9 +11,12 @@ import 'state.dart';
 
 Widget buildView(
     DetailPageState state, Dispatch dispatch, ViewService viewService) {
+  final Color _baseColor = Color(0xFFFFBB01);
   final CurvedAnimation p = CurvedAnimation(
       parent: state.pageAnimationController, curve: Curves.ease);
+
   final double _cardHeight = Adapt.screenH() * 2 / 3;
+  final double _recipeHeight = Adapt.padTopH() + Adapt.px(200);
   Widget _buildTabCell(TabItem d) {
     TextStyle selectStyle = TextStyle(
         fontWeight: FontWeight.bold,
@@ -37,7 +40,6 @@ Widget buildView(
     final CurvedAnimation _tarAnimated = CurvedAnimation(
         parent: state.pageAnimationController,
         curve: Interval(0, .5, curve: Curves.ease));
-    Color _tabBgColor = Color(0xFFFFBB01);
     return SlideTransition(
         position: Tween(begin: Offset(0, -.2), end: Offset.zero)
             .animate(_tarAnimated),
@@ -53,10 +55,10 @@ Widget buildView(
                     width: Adapt.px(220),
                     height: Adapt.px(80),
                     decoration: BoxDecoration(
-                        color: _tabBgColor,
+                        color: _baseColor,
                         boxShadow: [
                           BoxShadow(
-                              color: _tabBgColor.withAlpha(150),
+                              color: _baseColor.withAlpha(150),
                               blurRadius: 10,
                               offset: Offset(0, 5))
                         ],
@@ -133,7 +135,7 @@ Widget buildView(
             parent: state.pageAnimationController,
             curve: Interval(.7, 1, curve: Curves.ease))),
         child: Container(
-          width: Adapt.px(560),
+          width: Adapt.px(580),
           height: _cardHeight,
           margin: EdgeInsets.symmetric(
               horizontal: Adapt.px(40), vertical: Adapt.px(60)),
@@ -160,21 +162,10 @@ Widget buildView(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            SizedBox(
-                              width: Adapt.px(300),
-                              child: Text.rich(
-                                TextSpan(children: [
-                                  TextSpan(text: state.selectedCard.name),
-                                  TextSpan(
-                                      text: state.selectedCard.subName,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))
-                                ]),
+                            Text(state.selectedCard.name,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: Adapt.px(40)),
-                              ),
-                            ),
+                                    fontSize: Adapt.px(40))),
                             Icon(
                               Icons.favorite_border,
                               size: Adapt.px(55),
@@ -182,11 +173,16 @@ Widget buildView(
                             )
                           ],
                         ),
+                        Text(state.selectedCard.subName,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: Adapt.px(40))),
                         SizedBox(height: Adapt.px(20)),
                         Container(
                           height: Adapt.px(2),
                           width: Adapt.px(150),
-                          color: Color(0xFFFFBB01),
+                          color: _baseColor,
                         ),
                         SizedBox(height: Adapt.px(20)),
                         Text(
@@ -212,13 +208,31 @@ Widget buildView(
   }
 
   Widget _buildCard() {
-    return Stack(
-      children: <Widget>[
-        _buildCardBackGround(),
-        _buildCardInfo(),
-        _buildDish(),
-      ],
+    final CurvedAnimation selectedAnimation = CurvedAnimation(
+      parent: state.selectedController,
+      curve: Interval(0.2, .9, curve: Curves.ease),
     );
+    final CurvedAnimation dishAnimation = CurvedAnimation(
+      parent: state.selectedController,
+      curve: Interval(0.0, 1.0),
+    );
+    return SlideTransition(
+        position: Tween(
+                begin: Offset.zero,
+                end: Offset(.85, _recipeHeight / Adapt.screenH()))
+            .animate(selectedAnimation),
+        child: Stack(
+          children: <Widget>[
+            _buildCardBackGround(),
+            FadeTransition(
+                opacity: Tween(begin: 1.0, end: 0.0).animate(selectedAnimation),
+                child: _buildCardInfo()),
+            SlideTransition(
+                position: Tween(begin: Offset.zero, end: Offset(.85, 0.2))
+                    .animate(dishAnimation),
+                child: _buildDish()),
+          ],
+        ));
   }
 
   Widget _buildIngredientCell(IngredientItem d) {
@@ -243,29 +257,140 @@ Widget buildView(
 
   Widget _buildIngredients() {
     return FadeTransition(
-        opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: state.pageAnimationController,
-            curve: Interval(.5, .8, curve: Curves.ease))),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: Adapt.px(60)),
-                child: Text(
-                  'Ingredients',
-                  style: TextStyle(
-                      fontSize: Adapt.px(30), fontWeight: FontWeight.w600),
-                )),
-            SizedBox(
-              height: Adapt.px(20),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: state.selectedCard.ingredients
-                    .map(_buildIngredientCell)
-                    .toList()),
-          ],
+        opacity: Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+            parent: state.selectedController,
+            curve: Interval(0.0, .1, curve: Curves.ease))),
+        child: FadeTransition(
+            opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                parent: state.pageAnimationController,
+                curve: Interval(.6, .8, curve: Curves.ease))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Adapt.px(60)),
+                    child: Text(
+                      'Ingredients',
+                      style: TextStyle(
+                          fontSize: Adapt.px(30), fontWeight: FontWeight.w600),
+                    )),
+                SizedBox(
+                  height: Adapt.px(20),
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: state.selectedCard.ingredients
+                        .map(_buildIngredientCell)
+                        .toList()),
+              ],
+            )));
+  }
+
+  Widget _buildSearchBar() {
+    return FadeTransition(
+        opacity: Tween(begin: 0.2, end: .9).animate(CurvedAnimation(
+            parent: state.selectedController, curve: Curves.ease)),
+        child: Container(
+          height: Adapt.px(80),
+          padding: EdgeInsets.symmetric(horizontal: Adapt.px(30)),
+          margin: EdgeInsets.only(
+              top: Adapt.padTopH() + Adapt.px(160),
+              left: Adapt.px(80),
+              right: Adapt.px(80)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(Adapt.px(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[300],
+                    offset: Offset(5, 10),
+                    blurRadius: 10),
+              ]),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.search,
+                color: Color(0xFFFFBB01),
+              ),
+              SizedBox(width: Adapt.px(30)),
+              Text(
+                'Search',
+                style: TextStyle(color: Colors.grey, fontSize: Adapt.px(24)),
+              )
+            ],
+          ),
         ));
+  }
+
+  Widget _buildRecipeCell(CardInfo d) {
+    CurvedAnimation _dishAnimated = CurvedAnimation(
+        parent: state.selectedController,
+        curve: Interval(0.2, 0.5 + (4 - d.index) * 0.1, curve: Curves.ease));
+    CurvedAnimation _infoAnimated = CurvedAnimation(
+        parent: state.selectedController,
+        curve: Interval((3 - d.index) * 0.2, 0.5 + (4 - d.index) * 0.1,
+            curve: Curves.ease));
+    return GestureDetector(
+        onTap: () {
+          dispatch(DetailPageActionCreator.selectedCardChanged(d));
+          state.selectedController.reverse();
+        },
+        child: Container(
+          margin: EdgeInsets.only(bottom: Adapt.px(80)),
+          child: Row(
+            children: <Widget>[
+              SlideTransition(
+                position: Tween(
+                        begin: Offset(0, 1.0 * (6 - d.index)), end: Offset.zero)
+                    .animate(_dishAnimated),
+                child: Image.asset(d.dishUrl, width: Adapt.px(200)),
+              ),
+              SizedBox(width: Adapt.px(60)),
+              FadeTransition(
+                  opacity: Tween(begin: 0.0, end: 1.0).animate(_infoAnimated),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '${d.name} ${d.subName}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: Adapt.px(24)),
+                      ),
+                      SizedBox(height: Adapt.px(10)),
+                      Text(
+                        d.cal,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      SizedBox(height: Adapt.px(10)),
+                      Container(
+                        width: Adapt.px(100),
+                        height: Adapt.px(40),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: _baseColor),
+                            borderRadius: BorderRadius.circular(Adapt.px(20))),
+                        child: Center(
+                          child: Text('Book',
+                              style: TextStyle(
+                                  color: _baseColor, fontSize: Adapt.px(20))),
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildRecipeGroup() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+          Adapt.px(50), _recipeHeight, Adapt.px(50), Adapt.px(50)),
+      margin: EdgeInsets.only(top: Adapt.px(80)),
+      child: ListView(
+        children: state.cards.map(_buildRecipeCell).toList(),
+      ),
+    );
   }
 
   return Scaffold(
@@ -273,25 +398,26 @@ Widget buildView(
       body: AnimatedBuilder(
         animation: p,
         builder: (_, __) {
-          return Stack(children: <Widget>[
-            Container(
-              width: Adapt.px(350),
-              color: Color(0xFFF2F9FC).withOpacity(p.value),
-            ),
-            Container(
+          return Container(
               color: Colors.white.withOpacity(p.value),
-              child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildTabBar(),
-                    _buildCard(),
-                    _buildIngredients(),
-                  ],
+              child: Stack(children: <Widget>[
+                Container(
+                  width: Adapt.px(350),
+                  color: Color(0xFFF2F9FC).withOpacity(p.value),
                 ),
-              ),
-            )
-          ]);
+                _buildSearchBar(),
+                _buildRecipeGroup(),
+                SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildTabBar(),
+                      _buildCard(),
+                      _buildIngredients(),
+                    ],
+                  ),
+                ),
+              ]));
         },
       ));
 }

@@ -84,6 +84,7 @@ Widget buildView(
         opacity: Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
             parent: state.pageAnimationController, curve: Interval(0.0, .1))),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: Adapt.px(30)),
             Container(
