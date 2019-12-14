@@ -41,14 +41,13 @@ void _onDispose(Action action, Context<DetailPageState> ctx) {
 void _tabCellTapped(Action action, Context<DetailPageState> ctx) {
   TabItem item = action.payload;
   if (item != null) if (!item.selected) {
-    ctx.state.selectedController.forward();
     ctx.state.tabController.animateTo(item.index / 2,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+        duration: Duration(milliseconds: 200), curve: Curves.ease);
     ctx.state.tars.forEach((f) {
       f.selected = false;
     });
     item.selected = true;
-
+    ctx.state.selectedController.forward();
     ctx.dispatch(DetailPageActionCreator.updateTabState());
   }
 }

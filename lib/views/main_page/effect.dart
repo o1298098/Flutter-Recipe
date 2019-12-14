@@ -16,7 +16,7 @@ void _onAction(Action action, Context<MainPageState> ctx) {}
 void _onInit(Action action, Context<MainPageState> ctx) {
   final Object _ticker = ctx.stfState;
   ctx.state.pageAnimationController = AnimationController(
-      vsync: _ticker, duration: Duration(milliseconds: 300));
+      vsync: _ticker, duration: Duration(milliseconds: 800));
 }
 
 void _bottomPanelTapped(Action action, Context<MainPageState> ctx) async {

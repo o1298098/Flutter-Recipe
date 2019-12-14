@@ -97,14 +97,18 @@ Widget buildView(
                 ),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(Adapt.px(50)),
-                    child: Image.asset(
-                      state.selectedCard.backGroundUrl,
-                      width: Tween(begin: Adapt.screenW(), end: Adapt.px(560))
-                          .animate(p)
-                          .value,
-                      height: _cardHeight,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 200),
+                      child: Image.asset(
+                        state.selectedCard.backGroundUrl,
+                        key: ValueKey(state.selectedCard.backGroundUrl),
+                        width: Tween(begin: Adapt.screenW(), end: Adapt.px(560))
+                            .animate(p)
+                            .value,
+                        height: _cardHeight,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                      ),
                     ))));
       },
     );
@@ -231,7 +235,7 @@ Widget buildView(
                 opacity: Tween(begin: 1.0, end: 0.0).animate(selectedAnimation),
                 child: _buildCardInfo()),
             SlideTransition(
-                position: Tween(begin: Offset.zero, end: Offset(.85, 0.2))
+                position: Tween(begin: Offset.zero, end: Offset(.85, 0.3))
                     .animate(dishAnimation),
                 child: _buildDish()),
           ],
@@ -262,7 +266,7 @@ Widget buildView(
     return FadeTransition(
         opacity: Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
             parent: state.selectedController,
-            curve: Interval(0.0, .1, curve: Curves.ease))),
+            curve: Interval(0.0, .3, curve: Curves.ease))),
         child: FadeTransition(
             opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                 parent: state.pageAnimationController,
@@ -291,7 +295,7 @@ Widget buildView(
 
   Widget _buildSearchBar() {
     return FadeTransition(
-        opacity: Tween(begin: 0.2, end: .9).animate(CurvedAnimation(
+        opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: state.selectedController, curve: Curves.ease)),
         child: Container(
           height: Adapt.px(80),
@@ -344,7 +348,8 @@ Widget buildView(
             children: <Widget>[
               SlideTransition(
                 position: Tween(
-                        begin: Offset(0, 1.0 * (6 - d.index)), end: Offset.zero)
+                        begin: Offset(0, 1.0 * (6.5 - d.index)),
+                        end: Offset.zero)
                     .animate(_dishAnimated),
                 child: Image.asset(d.dishUrl, width: Adapt.px(200)),
               ),
